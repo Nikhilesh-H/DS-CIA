@@ -67,7 +67,7 @@ struct treap::node* treap::getroot(){
 //Method to insert a node into the treap - O(log n)
 struct treap::node* treap::insert(int key, int data, struct node*temp){
     insert_tree(key,data,temp);
-    
+    //Heapification should come here
     return root;
 }
 
