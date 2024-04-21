@@ -50,7 +50,7 @@ int main(void) {
       result = veb.successor(num);
 
       if (result == -1) {
-        printf("Element not found ");
+        printf("Successor not found ");
       } else {
         printf("Successor: %d ", result);
       }
@@ -66,7 +66,7 @@ int main(void) {
       result = veb.predecessor(num);
 
       if (result == -1) {
-        printf("Element not found ");
+        printf("Predecessor not found ");
       } else {
         printf("Predecessor: %d ", result);
       }
