@@ -23,6 +23,7 @@ class treap{
         int insert(int , int );
         void display(struct node*);
         struct node* getroot(void);
+        int search(int, struct node*);
 };
 
 int main(){
@@ -44,6 +45,17 @@ int main(){
                 }
                 else{
                     printf("Insertion unsuccessfull.\n");
+                }
+                break;
+            }
+            case 3:{
+                printf("Enter key : ");
+                scanf("%d",&key);
+                if(t.search(key, t.getroot())){
+                    printf("%d - Found.\n",key);
+                }
+                else{
+                    printf("%d - Not found.\n", key);
                 }
                 break;
             }
@@ -157,4 +169,24 @@ void treap::levelOrderTraversal(struct node *temp) {
             nodeCount--;
         }
     }
+}
+
+int treap::search(int num, struct node* temp){
+    if(temp==NULL){
+        return 0;
+    }
+    if(num==temp->key){
+        return 1;
+    }
+    else if(num<temp->key){
+        if (temp->left!=NULL){
+            return search(num,temp->left);
+        }
+    }
+    else{
+        if (temp->right!=NULL){
+            return search(num,temp->right);
+        }
+    }
+    return 0;
 }
