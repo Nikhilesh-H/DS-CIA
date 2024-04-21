@@ -1,59 +1,58 @@
-#include "veb.hpp"
-#include <iostream>
-
-using namespace std;
+#include "veb.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(void) {
-  VEBTree veb(16);
+  VEBTree veb(1 << 16);
   int choice;
   int num, result;
 
   while (true) {
     system("clear");
 
-    cout << "1. Insert" << endl;
-    cout << "2. Delete" << endl;
-    cout << "3. Successor" << endl;
-    cout << "4. Predecessor" << endl;
-    cout << "5. Minimum" << endl;
-    cout << "6. Maximum" << endl;
-    cout << "7. Exit" << endl;
-    cout << "Enter your choice(1..7): ";
+    printf("1. Insert\n");
+    printf("2. Delete\n");
+    printf("3. Successor\n");
+    printf("4. Predecessor\n");
+    printf("5. Minimum\n");
+    printf("6. Maximum\n");
+    printf("7. Exit\n");
+    printf("Enter your choice(1..7): ");
 
-    cin >> choice;
+    scanf("%d", &choice);
     switch (choice) {
     case 1:
-      cout << "Enter the element: ";
-      cin >> num;
+      printf("Enter the element: ");
+      scanf("%d", &num);
 
       veb.insert(num);
-      cout << "Element inserted ";
+      printf("Element inserted ");
 
       getchar();
       getchar();
 
       break;
     case 2:
-      cout << "Enter the element: ";
-      cin >> num;
+      printf("Enter the element: ");
+      scanf("%d", &num);
 
       veb.remove(num);
-      cout << "Element removed ";
+      printf("Element removed ");
 
       getchar();
       getchar();
 
       break;
     case 3:
-      cout << "Enter the element: ";
-      cin >> num;
+      printf("Enter the element: ");
+      scanf("%d", &num);
 
       result = veb.successor(num);
 
       if (result == -1) {
-        cout << "Element not found ";
+        printf("Element not found ");
       } else {
-        cout << "Successor: " << result << " ";
+        printf("Successor: %d ", result);
       }
 
       getchar();
@@ -61,15 +60,15 @@ int main(void) {
 
       break;
     case 4:
-      cout << "Enter the element: ";
-      cin >> num;
+      printf("Enter the element: ");
+      scanf("%d", &num);
 
       result = veb.predecessor(num);
 
       if (result == -1) {
-        cout << "Element not found ";
+        printf("Element not found ");
       } else {
-        cout << "Predecessor: " << result << " ";
+        printf("Predecessor: %d ", result);
       }
 
       getchar();
@@ -77,24 +76,36 @@ int main(void) {
 
       break;
     case 5:
-      cout << "Minimum: " << veb.minimum() << " ";
+      result = veb.minimum();
+
+      if (result == -1) {
+        printf("No minimum element ");
+      } else {
+        printf("Minimum: %d ", result);
+      }
 
       getchar();
       getchar();
 
       break;
     case 6:
-      cout << "Maximum: " << veb.maximum() << " ";
+      result = veb.maximum();
+
+      if (result == -1) {
+        printf("No maximum element ");
+      } else {
+        printf("Maximum: %d ", result);
+      }
 
       getchar();
       getchar();
 
       break;
     case 7:
-      cout << "Exiting... " << endl;
+      printf("Exiting...\n");
       return 0;
     default:
-      cout << "Invalid choice ";
+      printf("Invalid choice ");
 
       getchar();
       getchar();

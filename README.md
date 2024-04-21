@@ -17,8 +17,8 @@ Team:
 - [Satya]()
 
 ### Todos for us
-- [ ] Find Insert
-- [ ] Find Delete
+- [ ] Insert
+- [ ] Delete
 - [ ] Find Successor
 - [ ] Find Predecessor
 - [ ] Find Min

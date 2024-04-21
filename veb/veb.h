@@ -1,10 +1,8 @@
 #include <vector>
 
-using namespace std;
-
 class VEBTree {
 private:
-  vector<bool> bitvec;
+  std::vector<bool> bitvec;
 
 public:
   VEBTree(int size) {
