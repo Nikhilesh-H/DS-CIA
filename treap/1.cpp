@@ -147,7 +147,7 @@ void treap::levelOrderTraversal(struct node *temp) {
     while (!q.empty()) {
         int nodeCount = q.size();
         while (nodeCount > 0) {
-            node* node = q.front();
+            struct node* node = q.front();
             printf("%d ", node->data);
             q.pop();
             if (node->left)
