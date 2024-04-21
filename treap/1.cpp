@@ -16,6 +16,7 @@ class treap{
         void inorder(struct node*);
         struct node* insert(int key, int data, struct node* temp);
         void levelOrderTraversal(struct node*);
+        void destroyTree(struct node* temp);
     public:
         treap(){
             root = NULL;
@@ -25,6 +26,9 @@ class treap{
         void display(struct node*);
         struct node* getroot(void);
         int search(int, struct node*);
+        ~treap() {
+            destroyTree(root);
+        }
 };
 
 int main(){
@@ -77,6 +81,7 @@ int main(){
                 break;
             }
             case 5:{
+                t.~treap();
                 exit(0);
             }
             default:{
@@ -128,6 +133,21 @@ treap::node* treap::insert(int key, int data, struct node* temp){
     return temp;
 }
 
+treap::node* treap::rotateRight(struct node* y) {
+    struct node* x = y->left;
+    struct node* T2 = x->right;
+    x->right = y;
+    y->left = T2;
+    return x;
+}
+
+treap::node* treap::rotateLeft(struct node* x) {
+    struct node* y = x->right;
+    struct node* T2 = y->left;
+    y->left = x;
+    x->right = T2;
+    return y;
+}
 
 //Method to display the treap - O(n)
 void treap::display(struct node* temp){
@@ -152,22 +172,6 @@ void treap::inorder(struct node* temp){
     inorder(temp->right);
 }
 
-treap::node* treap::rotateRight(struct node* y) {
-    struct node* x = y->left;
-    struct node* T2 = x->right;
-    x->right = y;
-    y->left = T2;
-    return x;
-}
-
-treap::node* treap::rotateLeft(struct node* x) {
-    struct node* y = x->right;
-    struct node* T2 = y->left;
-    y->left = x;
-    x->right = T2;
-    return y;
-}
-
 void treap::levelOrderTraversal(struct node *temp) {
     if (temp == NULL)
         return;
@@ -189,7 +193,7 @@ void treap::levelOrderTraversal(struct node *temp) {
     }
 }
 
-//method to check if a key is present in the treap
+//Method to check if a key is present in the treap - O(log n)
 int treap::search(int num, struct node* temp){
     if(temp==NULL){
         return 0;
@@ -210,57 +214,62 @@ int treap::search(int num, struct node* temp){
     return 0;
 }
 
-//Method to delete a node a from the treap 
-treap::node* treap::del(int num, struct node* temp) {
+//Method to delete a node a from the treap - O(log n)
+treap::node* treap::del(int num, struct node* temp){
     if (temp == NULL)
         return temp;
-    
     if (num < temp->key)
         temp->left = del(num, temp->left);
     else if (num > temp->key)
         temp->right = del(num, temp->right);
-    else {
-        if (temp == root && (temp->left == NULL || temp->right == NULL)) {
-            if (temp->left == NULL && temp->right == NULL) {
+    else{
+        if (temp == root && (temp->left == NULL || temp->right == NULL)){
+            if (temp->left == NULL && temp->right == NULL){
                 free(temp);
                 root = NULL;
-            } else if (temp->left == NULL) {
+            }
+            else if (temp->left == NULL){
                 struct node* rightChild = temp->right;
                 free(temp);
                 root = rightChild;
-            } else {
+            } 
+            else{
                 struct node* leftChild = temp->left;
                 free(temp);
                 root = leftChild;
             }
             return root;
-        } else {
-            if (temp->left == NULL) {
+        } 
+        else{
+            if (temp->left == NULL){
                 struct node* rightChild = temp->right;
                 free(temp);
                 return rightChild;
-            } else if (temp->right == NULL) {
+            }
+            else if (temp->right == NULL){
                 struct node* leftChild = temp->left;
                 free(temp);
                 return leftChild;
-            } else {
+            }
+            else{
                 struct node* succParent = temp;
                 struct node* succ = temp->right;
-                while (succ->left != NULL) {
+                while (succ->left != NULL){
                     succParent = succ;
                     succ = succ->left;
                 }
                 temp->key = succ->key;
                 temp->data = succ->data;
-                if (succParent != temp)
+                if(succParent != temp)
                     succParent->left = del(succ->key, succParent->left);
-                else
+                else{
                     succParent->right = del(succ->key, succParent->right);
-                while (temp->left != NULL && temp->right != NULL &&
-                       (temp->left->data > temp->data || temp->right->data > temp->data)) {
-                    if (temp->left->data > temp->right->data) {
+                }
+                while (temp->left != NULL && temp->right != NULL && (temp->left->data > temp->data || temp->right->data > temp->data)) {
+                    if (temp->left->data > temp->right->data){
                         temp = rotateRight(temp);
-                    } else {
+                    }
+                    else {
                         temp = rotateLeft(temp);
                     }
                 }
@@ -268,4 +277,13 @@ treap::node* treap::del(int num, struct node* temp) {
         }
     }
     return temp;
+}
+
+//Method to delete the memory allocated to the tree - O(n)
+void treap::destroyTree(struct node* temp){
+    if (temp != nullptr) {
+        destroyTree(temp->left);
+        destroyTree(temp->right);
+        free(temp);
+    }
 }
