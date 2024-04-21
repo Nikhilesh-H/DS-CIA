@@ -221,7 +221,6 @@ treap::node* treap::del(int num, struct node* temp) {
         temp->right = del(num, temp->right);
     else {
         if (temp == root && (temp->left == NULL || temp->right == NULL)) {
-            // Node to be deleted is the root node and has at most one child
             if (temp->left == NULL && temp->right == NULL) {
                 free(temp);
                 root = NULL;
