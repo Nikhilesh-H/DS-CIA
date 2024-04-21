@@ -21,6 +21,7 @@ class treap{
             root = NULL;
         }
         int insert(int , int );
+        struct node* del(int,struct node*);
         void display(struct node*);
         struct node* getroot(void);
         int search(int, struct node*);
@@ -45,6 +46,18 @@ int main(){
                 }
                 else{
                     printf("Insertion unsuccessfull.\n");
+                }
+                break;
+            }
+            case 2:{
+                printf("Enter key : ");
+                scanf("%d",&key);
+                if(t.search(key, t.getroot())){
+                    t.del(key,t.getroot());
+                    printf("Successfully deleted %d\n", key);
+                }
+                else{
+                    printf("%d - Not found.\n", key);
                 }
                 break;
             }
@@ -118,6 +131,10 @@ treap::node* treap::insert(int key, int data, struct node* temp){
 
 //Method to display the treap - O(n)
 void treap::display(struct node* temp){
+    if (root==NULL){
+        printf("Empty treap!\n");
+        return;
+    }
     printf("Inorder display of treap :\n");
     inorder(temp);
     printf("\n");
@@ -155,12 +172,12 @@ void treap::levelOrderTraversal(struct node *temp) {
     if (temp == NULL)
         return;
     std::queue<node*> q;
-    q.push(root);
+    q.push(temp);
     while (!q.empty()) {
         int nodeCount = q.size();
         while (nodeCount > 0) {
             struct node* node = q.front();
-            printf("%d ", node->data);
+            printf("(%d,%d) ",node->key, node->data);
             q.pop();
             if (node->left)
                 q.push(node->left);
@@ -168,9 +185,11 @@ void treap::levelOrderTraversal(struct node *temp) {
                 q.push(node->right);
             nodeCount--;
         }
+        printf("\n");
     }
 }
 
+//method to check if a key is present in the treap
 int treap::search(int num, struct node* temp){
     if(temp==NULL){
         return 0;
@@ -189,4 +208,65 @@ int treap::search(int num, struct node* temp){
         }
     }
     return 0;
+}
+
+//Method to delete a node a from the treap 
+treap::node* treap::del(int num, struct node* temp) {
+    if (temp == NULL)
+        return temp;
+    
+    if (num < temp->key)
+        temp->left = del(num, temp->left);
+    else if (num > temp->key)
+        temp->right = del(num, temp->right);
+    else {
+        if (temp == root && (temp->left == NULL || temp->right == NULL)) {
+            // Node to be deleted is the root node and has at most one child
+            if (temp->left == NULL && temp->right == NULL) {
+                free(temp);
+                root = NULL;
+            } else if (temp->left == NULL) {
+                struct node* rightChild = temp->right;
+                free(temp);
+                root = rightChild;
+            } else {
+                struct node* leftChild = temp->left;
+                free(temp);
+                root = leftChild;
+            }
+            return root;
+        } else {
+            if (temp->left == NULL) {
+                struct node* rightChild = temp->right;
+                free(temp);
+                return rightChild;
+            } else if (temp->right == NULL) {
+                struct node* leftChild = temp->left;
+                free(temp);
+                return leftChild;
+            } else {
+                struct node* succParent = temp;
+                struct node* succ = temp->right;
+                while (succ->left != NULL) {
+                    succParent = succ;
+                    succ = succ->left;
+                }
+                temp->key = succ->key;
+                temp->data = succ->data;
+                if (succParent != temp)
+                    succParent->left = del(succ->key, succParent->left);
+                else
+                    succParent->right = del(succ->key, succParent->right);
+                while (temp->left != NULL && temp->right != NULL &&
+                       (temp->left->data > temp->data || temp->right->data > temp->data)) {
+                    if (temp->left->data > temp->right->data) {
+                        temp = rotateRight(temp);
+                    } else {
+                        temp = rotateLeft(temp);
+                    }
+                }
+            }
+        }
+    }
+    return temp;
 }
