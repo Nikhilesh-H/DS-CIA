@@ -1,34 +1,48 @@
 #include <math.h>
-#include <stdlib.h>
+#include <vector>
+
+#include "map.h"
 
 class VEBTree {
 private:
-  bool *bitvec;
-  bool *summary;
+  std::vector<bool> bitvec;
+  std::vector<VEBTree *> clusters;
+  VEBTree *summary;
   int u_size;
 
-  int root(int);
-  int index(int, int);
   int high(int);
   int low(int);
+  int index(int, int);
 
 public:
-  VEBTree(int size) : u_size(size) {
-    bitvec = (bool *)malloc(sizeof(bool) * size);
-    summary = (bool *)malloc(sizeof(bool) * root(size));
+  VEBTree(int size) {
+    u_size = size;
+    bitvec.resize(size);
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; ++i) {
       bitvec[i] = false;
     }
 
-    for (int i = 0; i < root(size); i++) {
-      summary[i] = false;
+    if (size > 2) {
+      int cluster_size = sqrt(size);
+
+      summary = new VEBTree(cluster_size);
+
+      clusters.resize(cluster_size);
+
+      for (int i = 0; i < cluster_size; ++i) {
+        clusters[i] = new VEBTree(cluster_size);
+      }
+    } else {
+      summary = nullptr;
     }
   }
 
   ~VEBTree() {
-    free(bitvec);
-    free(summary);
+    for (int i = 0; i < clusters.size(); ++i) {
+      delete clusters[i];
+    }
+    delete summary;
   }
 
   void insert(int);
@@ -39,121 +53,114 @@ public:
   int maximum();
 };
 
-int VEBTree::root(int num) {
-  return pow(2, ceil(log2(num) / 2));
-}
-
-int VEBTree::index(int high, int low) {
-  return high * root(u_size) + low;
-}
-
 int VEBTree::high(int num) {
-  return floor(num / root(u_size));
+  return static_cast<int>(floor(num / sqrt(u_size)));
 }
 
 int VEBTree::low(int num) {
-  return num % root(u_size);
+  return num % static_cast<int>(sqrt(u_size));
+}
+
+int VEBTree::index(int high, int low) {
+  return high * static_cast<int>(sqrt(u_size)) + low;
 }
 
 void VEBTree::insert(int num) {
-  bitvec[num] = true;
-  summary[high(num)] = true;
+  if (u_size == 2) {
+    bitvec[num] = true;
+  } else {
+    clusters[high(num)]->insert(low(num));
+    summary->insert(high(num));
+  }
 }
 
 void VEBTree::remove(int num) {
-  bitvec[num] = false;
-
-  for (int i = 0; i < root(u_size); i++) {
-    if (bitvec[index(high(num), i)]) {
-      return;
+  if (u_size == 2) {
+    bitvec[num] = false;
+  } else {
+    clusters[high(num)]->remove(low(num));
+    if (clusters[high(num)]->minimum() == -1) {
+      summary->remove(high(num));
     }
   }
-
-  summary[high(num)] = false;
 }
 
 int VEBTree::successor(int num) {
-  if (num < 0 || num >= u_size) {
-    return -1;
-  }
+  int i = high(num);
+  int j = clusters[i]->successor(low(num));
 
-  int high_num = high(num);
-  int low_num = low(num);
-  int offset = low_num;
-
-  while (offset < root(u_size)) {
-    if (bitvec[index(high_num, offset)]) {
-      return index(high_num, offset);
-    }
-    offset++;
-  }
-
-  for (int i = high_num + 1; i < root(u_size); i++) {
-    if (summary[i]) {
-      for (int j = 0; j < root(u_size); ++j) {
-        if (bitvec[index(i, j)]) {
-          return index(i, j);
-        }
-      }
+  if (j != -1) {
+    return index(i, j);
+  } else {
+    int succCluster = summary->successor(i);
+    if (succCluster == -1) {
+      return -1; // No successor found
+    } else {
+      j = clusters[succCluster]->minimum();
+      return index(succCluster, j);
     }
   }
-
-  return -1;
 }
 
 int VEBTree::predecessor(int num) {
-  if (num < 0 || num >= u_size) {
+  if (u_size == 2) {
+    if (num == 1 && bitvec[0]) {
+      return 0;
+    }
     return -1;
-  }
-
-  int high_num = high(num);
-  int low_num = low(num);
-  int offset = low_num;
-
-  while (offset >= 0) {
-    if (bitvec[index(high_num, offset)]) {
-      return index(high_num, offset);
-    }
-    --offset;
-  }
-
-  for (int i = high_num - 1; i >= 0; --i) {
-    if (summary[i]) {
-      for (int j = root(u_size) - 1; j >= 0; --j) {
-        if (bitvec[index(i, j)]) {
-          return index(i, j);
+  } else {
+    int min_low = clusters[high(num)]->minimum();
+    if (min_low != -1 && low(num) > min_low) {
+      int offset = clusters[high(num)]->predecessor(low(num));
+      return index(high(num), offset);
+    } else {
+      int pred_cluster = summary->predecessor(high(num));
+      if (pred_cluster == -1) {
+        if (bitvec[0] && num > 0) {
+          return 0;
         }
+        return -1;
       }
+      int offset = clusters[pred_cluster]->maximum();
+      return index(pred_cluster, offset);
     }
   }
-
-  return -1;
 }
 
 int VEBTree::minimum() {
-  for (int i = 0; i < root(u_size); i++) {
-    if (summary[i]) {
-      int cluster_min = i * root(u_size);
-      for (int j = 0; j < root(u_size); j++) {
-        if (bitvec[index(i, j)]) {
-          return cluster_min + j;
-        }
-      }
+  if (u_size == 2) {
+    if (bitvec[0]) {
+      return 0;
+    } else if (bitvec[1]) {
+      return 1;
+    } else {
+      return -1;
     }
+  } else {
+    int min_cluster = summary->minimum();
+    if (min_cluster == -1) {
+      return -1;
+    }
+    int offset = clusters[min_cluster]->minimum();
+    return index(min_cluster, offset);
   }
-  return -1;
 }
 
 int VEBTree::maximum() {
-  for (int i = root(u_size) - 1; i >= 0; i--) {
-    if (summary[i]) {
-      int cluster_max = (i + 1) * root(u_size) - 1;
-      for (int j = root(u_size) - 1; j >= 0; j--) {
-        if (bitvec[index(i, j)]) {
-          return cluster_max - (root(u_size) - 1 - j);
-        }
-      }
+  if (u_size == 2) {
+    if (bitvec[1]) {
+      return 1;
+    } else if (bitvec[0]) {
+      return 0;
+    } else {
+      return -1;
     }
+  } else {
+    int max_cluster = summary->maximum();
+    if (max_cluster == -1) {
+      return -1;
+    }
+    int offset = clusters[max_cluster]->maximum();
+    return index(max_cluster, offset);
   }
-  return -1;
 }

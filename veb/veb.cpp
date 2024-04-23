@@ -1,6 +1,6 @@
 #include "veb.h"
+
 #include <stdio.h>
-#include <stdlib.h>
 
 int main(void) {
   VEBTree veb(1 << 16);
