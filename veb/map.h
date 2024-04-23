@@ -22,11 +22,7 @@ private:
   void clear(Node *node);
 
 public:
-  HashMap() {
-    size = 0;
-    capacity = 0;
-    table = nullptr;
-  }
+  HashMap() : size(0), capacity(0), table(NULL) {}
 
   ~HashMap() {
     if (table) {
@@ -44,7 +40,7 @@ public:
 
 VEBTree *HashMap::get(int key) {
   if (capacity == 0) {
-    return nullptr;
+    return NULL;
   }
   int index = hash(key);
   Node *current = table[index];
@@ -54,7 +50,7 @@ VEBTree *HashMap::get(int key) {
     }
     current = current->next;
   }
-  return nullptr;
+  return NULL;
 }
 
 void HashMap::insert(int key, VEBTree *value) {
@@ -89,7 +85,7 @@ void HashMap::insert(int key, VEBTree *value) {
 void HashMap::remove(int key) {
   int index = hash(key);
   Node *current = table[index];
-  Node *prev = nullptr;
+  Node *prev = NULL;
 
   while (current) {
     if (current->key == key) {
@@ -116,7 +112,7 @@ void HashMap::resize() {
   }
 
   for (int i = 0; i < newCapacity; i++) {
-    newTable[i] = nullptr;
+    newTable[i] = NULL;
   }
 
   for (int i = 0; i < capacity; i++) {

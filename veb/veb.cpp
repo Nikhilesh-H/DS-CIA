@@ -4,8 +4,7 @@
 
 int main(void) {
   VEBTree veb(1 << 16);
-  int choice;
-  int num, result;
+  int choice, num, result;
 
   while (true) {
     system("clear");
