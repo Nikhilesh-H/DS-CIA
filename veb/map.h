@@ -17,32 +17,41 @@ private:
   int capacity;
   Node **table;
 
-  int hash(int key);
+  int hash(int);
   void resize();
-  void clear(Node *node);
 
 public:
   HashMap() : size(0), capacity(0), table(NULL) {}
 
   ~HashMap() {
-    if (table) {
+    if (table != NULL) {
       for (int i = 0; i < capacity; i++) {
-        clear(table[i]);
+        Node *current = table[i];
+        while (current) {
+          Node *next = current->next;
+          // TODO Free the VEBTree here
+          free(current->value);
+          free(current);
+          current = next;
+        }
       }
       free(table);
     }
   }
 
+  VEBTree *get(int);
   void insert(int, VEBTree *);
   void remove(int);
-  VEBTree *get(int);
+  void clear();
 };
 
 VEBTree *HashMap::get(int key) {
   if (capacity == 0) {
     return NULL;
   }
+
   int index = hash(key);
+
   Node *current = table[index];
   while (current) {
     if (current->key == key) {
@@ -50,6 +59,7 @@ VEBTree *HashMap::get(int key) {
     }
     current = current->next;
   }
+
   return NULL;
 }
 
@@ -63,7 +73,7 @@ void HashMap::insert(int key, VEBTree *value) {
   Node *current = table[index];
   while (current) {
     if (current->key == key) {
-      free(current->value);
+      // TODO Free the already existing VEBTree here
       current->value = value;
       return;
     }
@@ -94,6 +104,7 @@ void HashMap::remove(int key) {
       } else {
         table[index] = current->next;
       }
+      // TODO Don't think its getting freed properly
       free(current->value);
       free(current);
       size--;
@@ -106,10 +117,8 @@ void HashMap::remove(int key) {
 
 void HashMap::resize() {
   int newCapacity = capacity == 0 ? 1 : capacity * 2;
+
   Node **newTable = (Node **)malloc(newCapacity * sizeof(Node *));
-  if (!newTable) {
-    return;
-  }
 
   for (int i = 0; i < newCapacity; i++) {
     newTable[i] = NULL;
@@ -132,14 +141,8 @@ void HashMap::resize() {
   table = newTable;
 }
 
-void HashMap::clear(Node *node) {
-  while (node) {
-    Node *next = node->next;
-    free(node->value);
-    free(node);
-    node = next;
-  }
-}
+// TODO Clear table
+void HashMap::clear() {}
 
 int HashMap::hash(int key) {
   return key % capacity;

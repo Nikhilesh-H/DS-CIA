@@ -1,6 +1,5 @@
 # TODOS
 
-- Remove is not working
 - Incorporate use of hash table over vector to lower space complexity to O(n)
   than O(u)
 - Construct a better hash table

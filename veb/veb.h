@@ -45,22 +45,6 @@ public:
   int maximum();
 };
 
-int VEBTree::high(int num) {
-  return floor(num / root(u_size));
-}
-
-int VEBTree::low(int num) {
-  return num % (int)root(u_size);
-}
-
-int VEBTree::index(int high, int low) {
-  return high * root(u_size) + low;
-}
-
-int VEBTree::root(int num) {
-  return pow(2, ceil(log2(num) / 2));
-}
-
 void VEBTree::insert(int x) {
   if (min == -1) {
     min = max = x;
@@ -80,35 +64,34 @@ void VEBTree::insert(int x) {
   }
 }
 
-void VEBTree::remove(int num) {
-  // if (num < 0 || num >= u_size) {
-  //   return;
-  // }
-  //
-  // if (num == min_value && num == max_value) {
-  //   min_value = -1;
-  //   max_value = -1;
-  //   return;
-  // }
-  //
-  // if (num == min_value) {
-  //   int first_cluster = summary->minimum();
-  //   num = index(first_cluster, clusters[first_cluster]->minimum());
-  //   min_value = num;
-  // }
-  //
-  // if (num == max_value) {
-  //   int last_cluster = summary->maximum();
-  //   num = index(last_cluster, clusters[last_cluster]->maximum());
-  //   max_value = num;
-  // }
-  //
-  // if (u_size > 2) {
-  //   clusters[high(num)]->remove(low(num));
-  //   if (clusters[high(num)]->minimum() == -1) {
-  //     summary->remove(high(num));
-  //   }
-  // }
+void VEBTree::remove(int x) {
+  if (min == -1) {
+    return;
+  }
+
+  if (x == min) {
+    int i = summary->minimum();
+    if (i == -1) {
+      min = max = -1;
+      return;
+    }
+    x = min = index(i, clusters[i]->maximum());
+  }
+
+  clusters[high(x)]->remove(low(x));
+
+  if (clusters[high(x)]->minimum() == -1) {
+    summary->remove(high(x));
+  }
+
+  if (x == max) {
+    if (summary->maximum() == -1) {
+      max = min;
+    } else {
+      int i = summary->maximum();
+      max = index(i, clusters[i]->maximum());
+    }
+  }
 }
 
 int VEBTree::successor(int num) {
@@ -172,4 +155,20 @@ int VEBTree::minimum() {
 
 int VEBTree::maximum() {
   return max;
+}
+
+int VEBTree::high(int num) {
+  return floor(num / root(u_size));
+}
+
+int VEBTree::low(int num) {
+  return num % (int)root(u_size);
+}
+
+int VEBTree::index(int high, int low) {
+  return high * root(u_size) + low;
+}
+
+int VEBTree::root(int num) {
+  return pow(2, ceil(log2(num) / 2));
 }
