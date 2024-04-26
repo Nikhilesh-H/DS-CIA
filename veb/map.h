@@ -11,7 +11,7 @@ public:
 
 class HashMap {
 private:
-  float LOAD_FACTOR_THRESHOLD = 0.75;
+  const float LOAD_FACTOR_THRESHOLD = 0.75;
 
   int size;
   int capacity;
@@ -24,25 +24,12 @@ public:
   HashMap() : size(0), capacity(0), table(NULL) {}
 
   ~HashMap() {
-    if (table != NULL) {
-      for (int i = 0; i < capacity; i++) {
-        Node *current = table[i];
-        while (current) {
-          Node *next = current->next;
-          // TODO Free the VEBTree here
-          free(current->value);
-          free(current);
-          current = next;
-        }
-      }
-      free(table);
-    }
+    // TODO Implement free
   }
 
   VEBTree *get(int);
   void insert(int, VEBTree *);
   void remove(int);
-  void clear();
 };
 
 VEBTree *HashMap::get(int key) {
@@ -73,14 +60,12 @@ void HashMap::insert(int key, VEBTree *value) {
   Node *current = table[index];
   while (current) {
     if (current->key == key) {
-      // TODO Free the already existing VEBTree here
-      current->value = value;
       return;
     }
     current = current->next;
   }
 
-  Node *newNode = (Node *)malloc(sizeof(Node));
+  Node *newNode = new Node;
   newNode->key = key;
   newNode->value = value;
   newNode->next = table[index];
@@ -104,9 +89,7 @@ void HashMap::remove(int key) {
       } else {
         table[index] = current->next;
       }
-      // TODO Don't think its getting freed properly
-      free(current->value);
-      free(current);
+      // TODO Free memory
       size--;
       return;
     }
@@ -115,10 +98,14 @@ void HashMap::remove(int key) {
   }
 }
 
+int HashMap::hash(int key) {
+  return key % capacity;
+}
+
 void HashMap::resize() {
   int newCapacity = capacity == 0 ? 1 : capacity * 2;
 
-  Node **newTable = (Node **)malloc(newCapacity * sizeof(Node *));
+  Node **newTable = new Node *[newCapacity];
 
   for (int i = 0; i < newCapacity; i++) {
     newTable[i] = NULL;
@@ -135,15 +122,9 @@ void HashMap::resize() {
     }
   }
 
-  free(table);
+  // TODO Free table
+  // have to use delete[] table?
 
   capacity = newCapacity;
   table = newTable;
-}
-
-// TODO Clear table
-void HashMap::clear() {}
-
-int HashMap::hash(int key) {
-  return key % capacity;
 }
