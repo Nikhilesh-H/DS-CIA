@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "treap.h"
+
 int main(){
     int choice;
     int key;
