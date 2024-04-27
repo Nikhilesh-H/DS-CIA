@@ -30,6 +30,7 @@ public:
 
   void insert(int);
   void remove(int);
+  bool search(int);
   int successor(int);
   int predecessor(int);
   int getmin();
@@ -111,6 +112,27 @@ void VEBTree::remove(int num) {
   }
 }
 
+bool VEBTree::search(int x) {
+  if (min == -1) {
+    return false;
+  }
+
+  if (x == min || x == max) {
+    return true;
+  }
+
+  if (u_size <= 2) {
+    return false;
+  }
+
+  VEBTree *cluster = clusters.get(high(x));
+  if (cluster == nullptr) {
+    return false;
+  } else {
+    return cluster->search(low(x));
+  }
+}
+
 int VEBTree::successor(int num) {
   if (u_size == 2) {
     if (num == 0 && max == 1) {
@@ -182,7 +204,7 @@ int VEBTree::high(int num) {
 }
 
 int VEBTree::low(int num) {
-  return num % (int)root(u_size);
+  return num % root(u_size);
 }
 
 int VEBTree::index(int high, int low) {

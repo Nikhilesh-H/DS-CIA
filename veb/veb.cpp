@@ -11,11 +11,12 @@ int main(void) {
 
     printf("1. Insert\n");
     printf("2. Delete\n");
-    printf("3. Successor\n");
-    printf("4. Predecessor\n");
-    printf("5. Minimum\n");
-    printf("6. Maximum\n");
-    printf("7. Exit\n");
+    printf("3. Search\n");
+    printf("4. Successor\n");
+    printf("5. Predecessor\n");
+    printf("6. Minimum\n");
+    printf("7. Maximum\n");
+    printf("8. Exit\n");
     printf("Enter your choice(1..7): ");
 
     scanf("%d", &choice);
@@ -46,6 +47,20 @@ int main(void) {
       printf("Enter the element: ");
       scanf("%d", &num);
 
+      if (veb.search(num)) {
+        printf("Element found ");
+      } else {
+        printf("Element not found ");
+      }
+
+      getchar();
+      getchar();
+
+      break;
+    case 4:
+      printf("Enter the element: ");
+      scanf("%d", &num);
+
       result = veb.successor(num);
 
       if (result == -1) {
@@ -58,7 +73,7 @@ int main(void) {
       getchar();
 
       break;
-    case 4:
+    case 5:
       printf("Enter the element: ");
       scanf("%d", &num);
 
@@ -74,8 +89,8 @@ int main(void) {
       getchar();
 
       break;
-    case 5:
-      result = veb.minimum();
+    case 6:
+      result = veb.getmin();
 
       if (result == -1) {
         printf("No minimum element ");
@@ -87,8 +102,8 @@ int main(void) {
       getchar();
 
       break;
-    case 6:
-      result = veb.maximum();
+    case 7:
+      result = veb.getmax();
 
       if (result == -1) {
         printf("No maximum element ");
@@ -100,7 +115,7 @@ int main(void) {
       getchar();
 
       break;
-    case 7:
+    case 8:
       printf("Exiting...\n");
       return 0;
     default:
