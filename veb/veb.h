@@ -1,10 +1,11 @@
 #include <math.h>
+#include <unordered_map>
 
-#include "map.h"
+using namespace std;
 
 class VEBTree {
 private:
-  HashMap clusters;
+  std::unordered_map<int, VEBTree *> clusters;
   VEBTree *summary;
   int u_size;
   int min, max;
@@ -15,17 +16,20 @@ private:
   int root(int);
 
 public:
-  VEBTree(int size) : u_size(size), min(-1), max(-1) {
+  VEBTree(int size) : u_size(size), min(-1), max(-1), summary(nullptr) {
     if (size > 2) {
       int cluster_size = root(size);
       summary = new VEBTree(cluster_size);
-    } else {
-      summary = NULL;
     }
   }
 
   ~VEBTree() {
-    // TODO Free memory properly
+    for (auto &cluster : clusters) {
+      delete cluster.second;
+    }
+    clusters.clear();
+
+    delete summary;
   }
 
   void insert(int);
@@ -37,25 +41,25 @@ public:
   int getmax();
 };
 
-void VEBTree::insert(int x) {
+void VEBTree::insert(int num) {
   if (min == -1) {
-    min = max = x;
+    min = max = num;
     return;
   }
-  if (x < min) {
-    int tmp = x;
-    x = min;
+  if (num < min) {
+    int tmp = num;
+    num = min;
     min = tmp;
   }
-  if (x > max) {
-    max = x;
+  if (num > max) {
+    max = num;
   }
-  int high_x = high(x);
-  if (clusters.get(high_x) == nullptr) {
+  int high_x = high(num);
+  if (clusters.find(high_x) == clusters.end()) {
     summary->insert(high_x);
-    clusters.insert(high_x, new VEBTree(root(u_size)));
+    clusters[high_x] = new VEBTree(root(u_size));
   }
-  clusters.get(high_x)->insert(low(x));
+  clusters[high_x]->insert(low(num));
 }
 
 void VEBTree::remove(int num) {
@@ -68,45 +72,41 @@ void VEBTree::remove(int num) {
       min = max = 0;
     }
   } else {
-    int high_x = high(num);
     if (num == min) {
-      int min_low = clusters.get(high_x)->getmin();
-      if (min_low != -1) {
-        num = index(high_x, min_low);
-        min = num;
-      } else {
-        if (summary != nullptr) {
-          int summary_min = summary->getmin();
-          if (summary_min != -1) {
-            min = index(summary_min, clusters.get(summary_min)->getmin());
-          } else {
-            min = max;
-          }
-        } else {
-          min = max;
-        }
+      int summary_min = summary->getmin();
+      if (summary_min == -1) {
+        min = max = -1;
+        return;
       }
+      int cluster_max = clusters[summary_min]->getmax();
+      if (cluster_max == -1) {
+        min = max = -1;
+        return;
+      }
+      min = index(summary_min, cluster_max);
+      num = min;
     }
 
-    VEBTree *cluster_node = clusters.get(high_x);
+    int high_x = high(num);
+    VEBTree *cluster_node = clusters[high_x];
+    cluster_node->remove(low(num));
 
-    if (cluster_node != nullptr) {
-      cluster_node->remove(low(num));
-      if (cluster_node->getmin() == -1) {
-        // TODO Delete cluster node here
-        clusters.remove(high_x);
-        if (summary != nullptr) {
-          summary->remove(high_x);
-        }
-      }
+    if (cluster_node->getmin() == -1) {
+      clusters.erase(high_x);
+      summary->remove(high_x);
     }
 
-    if (num == max && summary != nullptr) {
+    if (num == max) {
       int summary_max = summary->getmax();
-      if (summary_max != -1) {
-        max = index(summary_max, clusters.get(summary_max)->getmax());
-      } else {
+      if (summary_max == -1) {
         max = min;
+      } else {
+        int cluster_max = clusters[summary_max]->getmax();
+        if (cluster_max == -1) {
+          max = min;
+        } else {
+          max = index(summary_max, cluster_max);
+        }
       }
     }
   }
@@ -125,7 +125,7 @@ bool VEBTree::search(int x) {
     return false;
   }
 
-  VEBTree *cluster = clusters.get(high(x));
+  VEBTree *cluster = clusters[high(x)];
   if (cluster == nullptr) {
     return false;
   } else {
@@ -146,14 +146,17 @@ int VEBTree::successor(int num) {
     int i = high(num);
     int j;
 
-    if (clusters.get(i) != nullptr && low(num < clusters.get(i)->max)) {
-      j = clusters.get(i)->successor(low(num));
-    } else {
+    if (clusters[i] != nullptr && low(num) < clusters[i]->max) {
+      j = clusters[i]->successor(low(num));
+    } else if (summary != nullptr) {
       i = summary->successor(i);
-      if (i == -1) {
+      if (i != -1 && clusters[i] != nullptr) {
+        j = clusters[i]->getmin();
+      } else {
         return -1;
       }
-      j = clusters.get(i)->min;
+    } else {
+      return -1;
     }
 
     return index(i, j);
@@ -173,8 +176,8 @@ int VEBTree::predecessor(int num) {
     int i = high(num);
     int j;
 
-    if (clusters.get(i) != nullptr && low(num) > clusters.get(i)->min) {
-      j = clusters.get(i)->predecessor(low(num));
+    if (clusters[i] != nullptr && low(num) > clusters[i]->min) {
+      j = clusters[i]->predecessor(low(num));
     } else {
       i = summary->predecessor(i);
       if (i == -1) {
@@ -184,7 +187,7 @@ int VEBTree::predecessor(int num) {
           return -1;
         }
       }
-      j = clusters.get(i)->max;
+      j = clusters[i]->max;
     }
 
     return index(i, j);

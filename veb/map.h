@@ -15,7 +15,6 @@ private:
 
   int size;
   int capacity;
-  Node **table;
 
   int hash(int);
   void resize();
@@ -23,13 +22,16 @@ private:
 public:
   HashMap() : size(0), capacity(0), table(NULL) {}
 
+  Node **table;
+
   ~HashMap() {
-    // TODO Implement free
+    delete[] table;
   }
 
   VEBTree *get(int);
   void insert(int, VEBTree *);
   void remove(int);
+  int getsize();
 };
 
 VEBTree *HashMap::get(int key) {
@@ -123,8 +125,12 @@ void HashMap::resize() {
   }
 
   // TODO Free table
-  // have to use delete[] table?
+  delete[] table;
 
   capacity = newCapacity;
   table = newTable;
+}
+
+int HashMap::getsize() {
+  return size;
 }
