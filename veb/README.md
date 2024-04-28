@@ -2,7 +2,6 @@
 
 ## High priority
 
-- Try to remove <unordered_map> by constructing my own hash table
 - Find way to reduce space from O(n log log u) to O(n)
 
 ## Indirection

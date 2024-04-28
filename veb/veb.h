@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include <unordered_map>
 
 using namespace std;
@@ -41,31 +41,25 @@ public:
   int getmax();
 };
 
-void VEBTree::insert(int num){
-if(min == -1){
-  min = max = num;
-  return;
-}
-if (num < min) {
-  
-  int temp = num;
-  num = min;
-  min = temp;
-  
-}
-if(num > max){
-  max = num;
-}
-
-int high_x = high(num);
-if(clusters.find(high_x) == clusters.end()){
-
-  summary -> insert(high_x);
-  clusters[high_x] = new
-VEBTree(root(u_size));
-}
-clusters[high_x] -> insert(low(num));
-
+void VEBTree::insert(int num) {
+  if (min == -1) {
+    min = max = num;
+    return;
+  }
+  if (num < min) {
+    int tmp = num;
+    num = min;
+    min = tmp;
+  }
+  if (num > max) {
+    max = num;
+  }
+  int high_x = high(num);
+  if (clusters.find(high_x) == clusters.end()) {
+    summary->insert(high_x);
+    clusters[high_x] = new VEBTree(root(u_size));
+  }
+  clusters[high_x]->insert(low(num));
 }
 
 void VEBTree::remove(int num) {
