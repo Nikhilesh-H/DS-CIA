@@ -27,8 +27,8 @@ int main(){
             case 2:{
                 printf("Enter key : ");
                 scanf("%d",&key);
-                if(t.search(key, t.getroot())){
-                    t.del(key,t.getroot());
+                if(t.search(key)){
+                    t.del(key);
                     printf("Successfully deleted %d\n", key);
                 }
                 else{
@@ -39,7 +39,7 @@ int main(){
             case 3:{
                 printf("Enter key : ");
                 scanf("%d",&key);
-                if(t.search(key, t.getroot())){
+                if(t.search(key)){
                     printf("%d - Found.\n",key);
                 }
                 else{
@@ -48,7 +48,7 @@ int main(){
                 break;
             }
             case 4:{
-                t.display(t.getroot());
+                t.display();
                 break;
             }
             case 5:{
