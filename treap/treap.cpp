@@ -1,26 +1,33 @@
-#include "treap.h"
 #include <stdio.h>
-#include <stdlib.h>
+
+#include "treap.h"
 
 int main()
 {
-    int choice;
-    int key;
-    int data;
-    treap t;
+    int choice, key, data;
+    treap treap;
+
     while (1)
     {
-        printf("\nMenu:\n\t1. Insert\n\t2. Delete\n\t3. Search\n\t4. Display\n\t5. "
-               "Exit\nEnter you choice : ");
+        printf("\nMenu:\n");
+        printf("\t1. Insert\n");
+        printf("\t2. Delete\n");
+        printf("\t3. Search\n");
+        printf("\t4. Display\n");
+        printf("\t5. Exit\n");
+        printf("Enter you choice : ");
+
         scanf("%d", &choice);
         switch (choice)
         {
-        case 1: {
+        case 1:
             printf("Enter key : ");
             scanf("%d", &key);
+
             printf("Enter data : ");
             scanf("%d", &data);
-            if (t.insert(key, data))
+
+            if (treap.insert(key, data))
             {
                 printf("Successfully inserted (%d,%d).\n", key, data);
             }
@@ -28,26 +35,28 @@ int main()
             {
                 printf("Insertion unsuccessfull.\n");
             }
+
             break;
-        }
-        case 2: {
+        case 2:
             printf("Enter key : ");
             scanf("%d", &key);
-            if (t.search(key))
+
+            if (treap.search(key))
             {
-                t.del(key);
+                treap.del(key);
                 printf("Successfully deleted %d\n", key);
             }
             else
             {
                 printf("%d - Not found.\n", key);
             }
+
             break;
-        }
-        case 3: {
+        case 3:
             printf("Enter key : ");
             scanf("%d", &key);
-            if (t.search(key))
+
+            if (treap.search(key))
             {
                 printf("%d - Found.\n", key);
             }
@@ -55,20 +64,16 @@ int main()
             {
                 printf("%d - Not found.\n", key);
             }
+
             break;
-        }
-        case 4: {
-            t.display();
+        case 4:
+            treap.display();
+
             break;
-        }
-        case 5: {
-            t.~treap();
-            exit(0);
-        }
-        default: {
+        case 5:
+            return 0;
+        default:
             printf("Error! Enter a valid choice.\n");
         }
-        }
     }
-    return 0;
 }
