@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <queue>
+#include <queue> // Included for level order display
 
 class treap{
     private:
@@ -17,15 +17,18 @@ class treap{
         struct node* insert(int key, int data, struct node* temp);
         void levelOrderTraversal(struct node*);
         void destroyTree(struct node* temp);
+        struct node* del(int,struct node*);
+        struct node* getroot(void);
+        void display(struct node*);
+        int search(int, struct node*);
     public:
         treap(){
             root = NULL;
         }
         int insert(int , int );
-        struct node* del(int,struct node*);
-        void display(struct node*);
-        struct node* getroot(void);
-        int search(int, struct node*);
+        int del(int);
+        void display(void);
+        int search(int);
         ~treap() {
             destroyTree(root);
         }
@@ -225,4 +228,17 @@ void treap::destroyTree(struct node* temp){
         destroyTree(temp->right);
         free(temp);
     }
+}
+
+int treap::del(int num){
+    del(num,getroot());
+    return 1;
+}
+
+void treap::display(void){
+    display(getroot());
+}
+
+int treap::search(int num){
+    return search(num,getroot());
 }
