@@ -27,37 +27,37 @@ TEST(InsertNode, InsertingMultipleNodes)
     EXPECT_EQ(t.insert(17, 170), true);
 }
 
-// Test Case 1 - Deleting a Leaf Node
+// Test Case 4 - Deleting a Leaf Node
 TEST(DeleteNode, DeleteLeafNode)
 {
     EXPECT_EQ(t.del(3), true);
 }
 
-// Test Case 2 - Deleting a Node with One Child
+// Test Case 5 - Deleting a Node with One Child
 TEST(DeleteNode, DeleteNodeWithOneChild)
 {
     EXPECT_EQ(t.del(15), true);
 }
 
-// Test Case 3 - Deleting a Node with Two Children
+// Test Case 6 - Deleting a Node with Two Children
 TEST(DeleteNode, DeleteNodeWithTwoChildren)
 {
     EXPECT_EQ(t.del(10), true);
 }
 
-// Test Case 1 - Searching for an Existing Key
+// Test Case 7 - Searching for an Existing Key
 TEST(SearchNode, SearchingExistingKey)
 {
     EXPECT_EQ(t.search(7), true);
 }
 
-// Test Case 2 - Searching for a Non-Existing Key
+// Test Case 8 - Searching for a Non-Existing Key
 TEST(SearchNode, SearchingNonExistingKey)
 {
     EXPECT_EQ(t.search(20), false);
 }
 
-// Test Case 3 - Searching in an Empty Treap
+// Test Case 9 - Searching in an Empty Treap
 TEST(SearchNode, SearchingInEmptyTreap)
 {
     treap tree;

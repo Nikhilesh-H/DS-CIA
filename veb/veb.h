@@ -1,12 +1,12 @@
 #include <cmath>
-#include <unordered_map>
+#include <vector>
 
 using namespace std;
 
 class VEBTree
 {
   private:
-    std::unordered_map<int, VEBTree *> clusters;
+    vector<VEBTree *> clusters;
     VEBTree *summary;
     int u_size;
     int min, max;
@@ -23,6 +23,12 @@ class VEBTree
         {
             int cluster_size = root(size);
             summary = new VEBTree(cluster_size);
+            clusters.resize(cluster_size, nullptr);
+
+            for (int i = 0; i < cluster_size; i++)
+            {
+                clusters[i] = new VEBTree(cluster_size);
+            }
         }
     }
 
@@ -30,7 +36,7 @@ class VEBTree
     {
         for (auto &cluster : clusters)
         {
-            delete cluster.second;
+            delete cluster;
         }
         clusters.clear();
 
@@ -50,94 +56,81 @@ void VEBTree::insert(int num)
 {
     if (min == -1)
     {
+        // If the tree is empty, set both min and max to the inserted value
         min = max = num;
         return;
     }
+
     if (num < min)
     {
-        int tmp = num;
-        num = min;
-        min = tmp;
+        // Swap min and num
+        swap(min, num);
     }
+
     if (num > max)
     {
+        // Update max if necessary
         max = num;
     }
-    int high_x = high(num);
-    if (clusters.find(high_x) == clusters.end())
+
+    // Check if the tree has more than two elements
+    if (u_size > 2)
     {
-        summary->insert(high_x);
-        clusters[high_x] = new VEBTree(root(u_size));
+        int high_x = high(num);
+        int low_x = low(num);
+
+        // If the cluster doesn't exist, create it
+        if (clusters[high_x] == nullptr)
+        {
+            summary->insert(high_x);                      // Insert the high-order bit into the summary
+            clusters[high_x] = new VEBTree(root(u_size)); // Create a new cluster
+        }
+
+        // Insert the low-order bits into the corresponding cluster
+        clusters[high_x]->insert(low_x);
     }
-    clusters[high_x]->insert(low(num));
 }
 
 void VEBTree::remove(int num)
 {
-    if (min == max)
+    if (min == -1)
+        return;
+
+    if (num == min)
     {
-        min = max = -1;
-    }
-    else if (u_size == 2)
-    {
-        if (num == 0)
+        int i = summary->getmin();
+        if (i == -1)
         {
-            min = max = 1;
+            min = max = -1;
+            return;
+        }
+        num = min = index(i, clusters[i]->getmin());
+    }
+
+    int high_x = high(num);
+    int low_x = low(num);
+
+    if (clusters[high_x] != nullptr)
+    {
+        clusters[high_x]->remove(low_x);
+        if (clusters[high_x]->getmin() == -1)
+        {
+            summary->remove(high_x);
+            delete clusters[high_x];
+            clusters[high_x] = nullptr;
+        }
+    }
+
+    if (num == max)
+    {
+        int i = summary->getmax();
+        if (i == -1)
+        {
+            max = min;
         }
         else
         {
-            min = max = 0;
-        }
-    }
-    else
-    {
-        if (num == min)
-        {
-            int summary_min = summary->getmin();
-            if (summary_min == -1)
-            {
-                min = max = -1;
-                return;
-            }
-            int cluster_max = clusters[summary_min]->getmax();
-            if (cluster_max == -1)
-            {
-                min = max = -1;
-                return;
-            }
-            min = index(summary_min, cluster_max);
-            num = min;
-        }
-
-        int high_x = high(num);
-        VEBTree *cluster_node = clusters[high_x];
-        cluster_node->remove(low(num));
-
-        if (cluster_node->getmin() == -1)
-        {
-            clusters.erase(high_x);
-            summary->remove(high_x);
-        }
-
-        if (num == max)
-        {
-            int summary_max = summary->getmax();
-            if (summary_max == -1)
-            {
-                max = min;
-            }
-            else
-            {
-                int cluster_max = clusters[summary_max]->getmax();
-                if (cluster_max == -1)
-                {
-                    max = min;
-                }
-                else
-                {
-                    max = index(summary_max, cluster_max);
-                }
-            }
+            max = index(i, clusters[i]->getmax());
         }
     }
 }
