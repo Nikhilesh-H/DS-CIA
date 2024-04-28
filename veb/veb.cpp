@@ -2,9 +2,11 @@
 
 #include <stdio.h>
 
+#define SIZE 65536
+
 int main(void)
 {
-    VEBTree veb(1 << 16);
+    VEBTree veb(SIZE);
     int choice, num, result;
 
     while (true)
@@ -28,8 +30,15 @@ int main(void)
             printf("Enter the element: ");
             scanf("%d", &num);
 
-            veb.insert(num);
-            printf("Element inserted ");
+            if (num >= SIZE || num < 0)
+            {
+                printf("Element out of range ");
+            }
+            else
+            {
+                veb.insert(num);
+                printf("Element inserted ");
+            }
 
             getchar();
             getchar();
@@ -39,8 +48,19 @@ int main(void)
             printf("Enter the element: ");
             scanf("%d", &num);
 
-            veb.remove(num);
-            printf("Element removed ");
+            if (num >= SIZE || num < 0)
+            {
+                printf("Element out of range ");
+            }
+            else if (!veb.search(num))
+            {
+                printf("Element not found ");
+            }
+            else
+            {
+                veb.remove(num);
+                printf("Element removed ");
+            }
 
             getchar();
             getchar();
