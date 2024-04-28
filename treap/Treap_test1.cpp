@@ -26,33 +26,33 @@ TEST(InsertNode, InsertingMultipleNodes) {
 
 // Test Case 1 - Deleting a Leaf Node
 TEST(DeleteNode, DeleteLeafNode) {
-  EXPECT_NE(t.del(3, t.getroot()), nullptr);
+  EXPECT_NE(t.del(3), nullptr);
 }
 
 // Test Case 2 - Deleting a Node with One Child
 TEST(DeleteNode, DeleteNodeWithOneChild) {
-  EXPECT_NE(t.del(15, t.getroot()), nullptr);
+  EXPECT_NE(t.del(15), nullptr);
 }
 
 // Test Case 3 - Deleting a Node with Two Children
 TEST(DeleteNode, DeleteNodeWithTwoChildren) {
-  EXPECT_NE(t.del(10, t.getroot()), nullptr);
+  EXPECT_NE(t.del(10), nullptr);
 }
 
 // Test Case 1 - Searching for an Existing Key
 TEST(SearchNode, SearchingExistingKey) {
-  EXPECT_EQ(t.search(7, t.getroot()), true);
+  EXPECT_EQ(t.search(7), true);
 }
 
 // Test Case 2 - Searching for a Non-Existing Key
 TEST(SearchNode, SearchingNonExistingKey) {
-  EXPECT_EQ(t.search(20, t.getroot()), false);
+  EXPECT_EQ(t.search(20), false);
 }
 
 // Test Case 3 - Searching in an Empty Treap
 TEST(SearchNode, SearchingInEmptyTreap) {
   treap t;
-  EXPECT_EQ(t.search(5, t.getroot()), false);
+  EXPECT_EQ(t.search(5), false);
 }
 
 int main(int argc, char **argv) {
