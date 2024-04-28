@@ -7,17 +7,17 @@ Submission for CIA-2 for the Data Structures Course - CS1006T.
 
 ## Team
 ### Managers
-- [Ramana](https://www.github.com/Ignia707) - Project Manager
-- [Prajesh Raam](https://www.github.com/hotaru-hspr) - Business Analyst
+- [Ramana K S](https://www.github.com/Ignia707) - Project Manager
+- [Prajesh Raam H S](https://www.github.com/hotaru-hspr) - Business Analyst
 
 ### Developers
-- [Saran](https://www.github.com/try3d)
-- [Nikhilesh](https://www.github.com/Nikhilesh-H)
-- [Prem](https://www.github.com/Black-Hawk-005)
-- [Nighil](https://www.github.com/nighil05)
-- [Raghav](https://www.github.com/raghavsridharan)
+- [Saran Shankar R](https://www.github.com/try3d)
+- [Nikhilesh H](https://www.github.com/Nikhilesh-H)
+- [Prem Danasekaran](https://www.github.com/Black-Hawk-005)
+- [Nighil Natarajan](https://www.github.com/nighil05)
+- [Raghav Sridharan](https://www.github.com/raghavsridharan)
 
 ### Testers
-- [Satya](https://www.github.com/Sathya4683)
-- [Sanjeev](https://www.github.com/sanjeevkrishna2114)
-- [Nithilan](https://www.github.com/MadeForMoney)
+- [Satya Narayanan](https://www.github.com/Sathya4683)
+- [Sanjeev Krishna S](https://www.github.com/sanjeevkrishna2114)
+- [Nithilan M](https://www.github.com/MadeForMoney)
