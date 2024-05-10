@@ -18,6 +18,6 @@ Submission for CIA-2 for the Data Structures Course - CS1006T.
 - [Raghav Sridharan](https://www.github.com/raghavsridharan)
 
 ### Testers
-- [Satya Narayanan](https://www.github.com/Sathya4683)
+- [Sathya Narayanan](https://www.github.com/Sathya4683)
 - [Sanjeev Krishna S](https://www.github.com/sanjeevkrishna2114)
 - [Nithilan M](https://www.github.com/MadeForMoney)
