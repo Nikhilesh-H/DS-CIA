@@ -30,6 +30,26 @@ TEST(Insert, InsertingManyValues)
 
     EXPECT_EQ(veb.getmin(), 0);
     EXPECT_EQ(veb.getmax(), 9999);
+
+    int count = 0;
+    for (int i = 0; i < 10000; i++)
+    {
+        if (veb.search(i))
+        {
+            count++;
+        }
+    }
+    EXPECT_EQ(count, 10000);
+
+    count = 0;
+    for (int i = 10000; i < 20000; i++)
+    {
+        if (veb.search(i))
+        {
+            count++;
+        }
+    }
+    EXPECT_EQ(count, 0);
 }
 
 // Test Case 3 - Inserting duplicates
