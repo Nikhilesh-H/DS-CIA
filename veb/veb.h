@@ -28,9 +28,9 @@ class VEBTree
 
     ~VEBTree()
     {
-        for (unordered_map<int, VEBTree *>::iterator it = cluster.begin(); it != cluster.end(); it++)
+        for (auto pair : cluster)
         {
-            delete it->second;
+            delete pair.second;
         }
         cluster.clear();
 

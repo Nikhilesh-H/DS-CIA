@@ -2,7 +2,7 @@
 
 #include "treap.h"
 
-treap t;
+Treap t;
 
 // Test Case 1 - Inserting a Node
 TEST(InsertNode, InsertingNode)
@@ -60,7 +60,7 @@ TEST(SearchNode, SearchingNonExistingKey)
 // Test Case 9 - Searching in an Empty Treap
 TEST(SearchNode, SearchingInEmptyTreap)
 {
-    treap tree;
+    Treap tree;
     EXPECT_EQ(tree.search(5), false);
 }
 

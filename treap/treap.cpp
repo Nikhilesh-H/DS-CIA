@@ -5,7 +5,7 @@
 int main()
 {
     int choice, key, data;
-    treap treap;
+    Treap treap;
 
     while (1)
     {

@@ -11,7 +11,7 @@ class Node
     Node *right;
 };
 
-class treap
+class Treap
 {
   private:
     Node *root;
@@ -28,12 +28,11 @@ class treap
     void destroyTree(Node *);
 
   public:
-    treap()
+    Treap() : root(NULL)
     {
-        root = NULL;
     }
 
-    ~treap()
+    ~Treap()
     {
         destroyTree(root);
     }
@@ -45,13 +44,13 @@ class treap
 };
 
 // Method to get root of treap - O(1)
-Node *treap::getroot()
+Node *Treap::getroot()
 {
     return root;
 }
 
 // Method to insert a node into the treap - O(log n)
-int treap::insert(int key, int data)
+int Treap::insert(int key, int data)
 {
     root = insert(key, data, root);
 
@@ -63,7 +62,7 @@ int treap::insert(int key, int data)
     return 1;
 }
 
-Node *treap::insert(int key, int data, Node *temp)
+Node *Treap::insert(int key, int data, Node *temp)
 {
     if (temp == NULL)
     {
@@ -101,7 +100,7 @@ Node *treap::insert(int key, int data, Node *temp)
     return temp;
 }
 
-Node *treap::rotateRight(Node *temp)
+Node *Treap::rotateRight(Node *temp)
 {
     Node *leftNode = temp->left;
     Node *rightNode = leftNode->right;
@@ -112,7 +111,7 @@ Node *treap::rotateRight(Node *temp)
     return leftNode;
 }
 
-Node *treap::rotateLeft(Node *temp)
+Node *Treap::rotateLeft(Node *temp)
 {
     Node *rightNode = temp->right;
     Node *leftNode = rightNode->left;
@@ -124,7 +123,7 @@ Node *treap::rotateLeft(Node *temp)
 }
 
 // Method to display the treap - O(n)
-void treap::display(Node *temp)
+void Treap::display(Node *temp)
 {
     if (root == NULL)
     {
@@ -141,7 +140,7 @@ void treap::display(Node *temp)
     printf("\n");
 }
 
-void treap::inOrderTraversal(Node *temp)
+void Treap::inOrderTraversal(Node *temp)
 {
     if (temp == NULL)
     {
@@ -153,7 +152,7 @@ void treap::inOrderTraversal(Node *temp)
     inOrderTraversal(temp->right);
 }
 
-void treap::levelOrderTraversal(Node *temp)
+void Treap::levelOrderTraversal(Node *temp)
 {
     if (temp == NULL)
     {
@@ -190,7 +189,7 @@ void treap::levelOrderTraversal(Node *temp)
 }
 
 // Method to check if a key is present in the treap - O(log n)
-int treap::search(int num, Node *temp)
+int Treap::search(int num, Node *temp)
 {
     if (temp == NULL)
     {
@@ -219,7 +218,7 @@ int treap::search(int num, Node *temp)
 }
 
 // Method to delete a node a from the treap - O(log n)
-Node *treap::del(int num, Node *temp)
+Node *Treap::del(int num, Node *temp)
 {
     if (temp == NULL)
     {
@@ -313,7 +312,7 @@ Node *treap::del(int num, Node *temp)
 }
 
 // Method to delete the memory allocated to the tree - O(n)
-void treap::destroyTree(Node *temp)
+void Treap::destroyTree(Node *temp)
 {
     if (temp != nullptr)
     {
@@ -323,18 +322,18 @@ void treap::destroyTree(Node *temp)
     }
 }
 
-int treap::del(int num)
+int Treap::del(int num)
 {
     del(num, getroot());
     return 1;
 }
 
-void treap::display(void)
+void Treap::display(void)
 {
     display(getroot());
 }
 
-int treap::search(int num)
+int Treap::search(int num)
 {
     return search(num, getroot());
 }
