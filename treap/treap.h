@@ -1,17 +1,9 @@
-#include <queue> // Included for level order display
+#include "queue.h" // Included for level order display
 #include <stdio.h>
 #include <stdlib.h>
 
-class Node
-{
-  public:
-    int key;
-    int data;
-    Node *left;
-    Node *right;
-};
 
-class Treap
+class treap
 {
   private:
     Node *root;
@@ -28,11 +20,12 @@ class Treap
     void destroyTree(Node *);
 
   public:
-    Treap() : root(NULL)
+    treap()
     {
+        root = NULL;
     }
 
-    ~Treap()
+    ~treap()
     {
         destroyTree(root);
     }
@@ -44,13 +37,13 @@ class Treap
 };
 
 // Method to get root of treap - O(1)
-Node *Treap::getroot()
+Node *treap::getroot()
 {
     return root;
 }
 
 // Method to insert a node into the treap - O(log n)
-int Treap::insert(int key, int data)
+int treap::insert(int key, int data)
 {
     root = insert(key, data, root);
 
@@ -62,7 +55,7 @@ int Treap::insert(int key, int data)
     return 1;
 }
 
-Node *Treap::insert(int key, int data, Node *temp)
+Node *treap::insert(int key, int data, Node *temp)
 {
     if (temp == NULL)
     {
@@ -100,7 +93,7 @@ Node *Treap::insert(int key, int data, Node *temp)
     return temp;
 }
 
-Node *Treap::rotateRight(Node *temp)
+Node *treap::rotateRight(Node *temp)
 {
     Node *leftNode = temp->left;
     Node *rightNode = leftNode->right;
@@ -111,7 +104,7 @@ Node *Treap::rotateRight(Node *temp)
     return leftNode;
 }
 
-Node *Treap::rotateLeft(Node *temp)
+Node *treap::rotateLeft(Node *temp)
 {
     Node *rightNode = temp->right;
     Node *leftNode = rightNode->left;
@@ -123,7 +116,7 @@ Node *Treap::rotateLeft(Node *temp)
 }
 
 // Method to display the treap - O(n)
-void Treap::display(Node *temp)
+void treap::display(Node *temp)
 {
     if (root == NULL)
     {
@@ -140,7 +133,7 @@ void Treap::display(Node *temp)
     printf("\n");
 }
 
-void Treap::inOrderTraversal(Node *temp)
+void treap::inOrderTraversal(Node *temp)
 {
     if (temp == NULL)
     {
@@ -152,34 +145,34 @@ void Treap::inOrderTraversal(Node *temp)
     inOrderTraversal(temp->right);
 }
 
-void Treap::levelOrderTraversal(Node *temp)
+void treap::levelOrderTraversal(Node *temp)
 {
     if (temp == NULL)
     {
         return;
     }
 
-    std::queue<Node *> q;
-    q.push(temp);
+    queue q;
+    q.enqueue(temp);
 
-    while (!q.empty())
+    while (q.size() != 0)
     {
         int nodeCount = q.size();
 
         while (nodeCount > 0)
         {
-            Node *node = q.front();
+            Node *node = q.frontpeek();
             printf("(%d,%d) ", node->key, node->data);
 
-            q.pop();
+            q.dequeue();
             if (node->left)
             {
-                q.push(node->left);
+                q.enqueue(node->left);
             }
 
             if (node->right)
             {
-                q.push(node->right);
+                q.enqueue(node->right);
             }
 
             nodeCount--;
@@ -189,7 +182,7 @@ void Treap::levelOrderTraversal(Node *temp)
 }
 
 // Method to check if a key is present in the treap - O(log n)
-int Treap::search(int num, Node *temp)
+int treap::search(int num, Node *temp)
 {
     if (temp == NULL)
     {
@@ -218,7 +211,7 @@ int Treap::search(int num, Node *temp)
 }
 
 // Method to delete a node a from the treap - O(log n)
-Node *Treap::del(int num, Node *temp)
+Node *treap::del(int num, Node *temp)
 {
     if (temp == NULL)
     {
@@ -312,7 +305,7 @@ Node *Treap::del(int num, Node *temp)
 }
 
 // Method to delete the memory allocated to the tree - O(n)
-void Treap::destroyTree(Node *temp)
+void treap::destroyTree(Node *temp)
 {
     if (temp != nullptr)
     {
@@ -322,18 +315,18 @@ void Treap::destroyTree(Node *temp)
     }
 }
 
-int Treap::del(int num)
+int treap::del(int num)
 {
     del(num, getroot());
-    return 1;
+    return 1;   
 }
 
-void Treap::display(void)
+void treap::display(void)
 {
     display(getroot());
 }
 
-int Treap::search(int num)
+int treap::search(int num)
 {
     return search(num, getroot());
 }
