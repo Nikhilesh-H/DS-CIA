@@ -44,6 +44,24 @@ On Windows:
 ./a.exe
 ```
 
+### Examples
+
+To run the **Treap** program on Linux/Mac:
+
+```
+cd treap
+g++ treap.cpp
+./a.out
+```
+
+To run the **vEB Tree** program on Windows:
+
+```
+cd veb
+g++ veb.cpp
+./a.exe
+```
+
 ## Citations
 
 - [Treaps – Complete Introduction by Uzair Javed Akhtar](https://www.youtube.com/watch?v=ZNtC4oUaQ8A)
